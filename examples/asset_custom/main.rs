@@ -35,30 +35,6 @@ pub struct LoadingState {
     energy_blast_handle: Option<Handle<EnergyBlast>>,
 }
 
-/// Format for loading from `.mylang` files.
-#[derive(Clone, Debug, Default, Deserialize, Serialize, TypeUuid)]
-#[uuid = "1aacd480-2eb5-4e02-8ed4-daaf33245a45"]
-pub struct MyLangFormat;
-
-impl Format<EnergyBlast> for MyLangFormat {
-    fn name(&self) -> &'static str {
-        "MyLangEnergyBlast"
-    }
-
-    fn import_simple(&self, bytes: Vec<u8>) -> Result<EnergyBlast, Error> {
-        println!("Importing a mylang file to EnergyBlast");
-        use ron::de::Deserializer;
-        let mut d = Deserializer::from_bytes(&bytes)
-            .with_context(|_| format_err!("Failed deserializing Ron file"))?;
-        let val = EnergyBlast::deserialize(&mut d)
-            .with_context(|_| format_err!("Failed parsing Ron file"))?;
-        d.end()
-            .with_context(|_| format_err!("Failed parsing Ron file"))?;
-
-        Ok(val)
-    }
-}
-
 use amethyst::assets as amethyst_assets;
 register_asset_type!(EnergyBlast => EnergyBlast; AssetProcessorSystem<EnergyBlast>);
 
